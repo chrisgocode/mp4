@@ -11,7 +11,7 @@ export type SearchGamesResponse = {
     url: string;
   };
   name: string;
-  slug: string;
+  summary: string;
 };
 
 export type GetGameResponse = {

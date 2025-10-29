@@ -1,3 +1,5 @@
+"use server";
+
 import type {
   SearchGamesResponse,
   GetGameResponse,
@@ -35,6 +37,10 @@ async function getAccessToken() {
     }),
   });
 
+  if (!response.ok) {
+    throw new Error(`Twitch OAuth error: ${response.status}`);
+  }
+
   const data: TwitchOAuthResponse = await response.json();
 
   cachedToken = data.access_token;
@@ -57,6 +63,10 @@ async function igdbFetch<T>(endpoint: string, query: string): Promise<T[]> {
     body: query,
   });
 
+  if (!response.ok) {
+    throw new Error(`IGDB API error: ${response.status}`);
+  }
+
   return response.json();
 }
 
@@ -66,7 +76,7 @@ export async function searchGames(
   return igdbFetch(
     "games",
     `
-    fields id,name,cover.url,slug;
+    fields id,name,cover.url,summary;
     where (name ~ "${query}"* & themes != (42) & version_parent=null & parent_game=null);
     sort rating desc;
     limit 10;
@@ -74,12 +84,14 @@ export async function searchGames(
   );
 }
 
-export async function getGame(id: number): Promise<GetGameResponse[]> {
-  return igdbFetch(
+export async function getGame(id: number): Promise<GetGameResponse> {
+  const results = await igdbFetch<GetGameResponse>(
     "games",
     `
     fields id,name,genres.name,first_release_date,total_rating,total_rating_count,cover.url,artworks.url,summary;
     where id = ${id};
     `,
   );
+
+  return results[0];
 }
