@@ -4,7 +4,7 @@ import type {
   SearchGamesResponse,
   GetGameResponse,
   TwitchOAuthResponse,
-} from "@/types.ts/responses";
+} from "@/types/responses";
 
 // caching bearer token in memory from twitch
 let cachedToken: string | null = null;
@@ -76,7 +76,7 @@ export async function searchGames(
   return igdbFetch(
     "games",
     `
-    fields id,name,cover.url,summary;
+    fields id,name,cover.image_id,summary;
     where (name ~ "${query}"* & themes != (42) & version_parent=null & parent_game=null);
     sort rating desc;
     limit 10;
@@ -88,7 +88,7 @@ export async function getGame(id: number): Promise<GetGameResponse> {
   const results = await igdbFetch<GetGameResponse>(
     "games",
     `
-    fields id,name,genres.name,first_release_date,total_rating,total_rating_count,cover.url,artworks.url,summary;
+    fields id,name,genres.name,first_release_date,total_rating,total_rating_count,cover.image_id,artworks.image_id,screenshots.image_id,summary;
     where id = ${id};
     `,
   );

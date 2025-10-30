@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { searchGames } from "@/lib/igbd";
-import type { SearchGamesResponse } from "@/types.ts/responses";
+import { searchGames } from "@/lib/igdb";
+import { createIGDBImageUrl } from "@/lib/igdb.images";
+import type { SearchGamesResponse } from "@/types/responses";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -95,9 +96,9 @@ export default function SearchBar() {
                 className="w-full text-left p-4 hover:bg-accent transition-colors focus:bg-accent focus:outline-none block"
               >
                 <div className="flex gap-3">
-                  {result.cover?.url && (
+                  {result.cover?.image_id && (
                     <Image
-                      src={`https:${result.cover.url}`}
+                      src={createIGDBImageUrl("1080p", result.cover.image_id)}
                       alt={result.name}
                       width={150}
                       height={150}
