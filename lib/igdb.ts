@@ -70,6 +70,7 @@ async function igdbFetch<T>(endpoint: string, query: string): Promise<T[]> {
   return response.json();
 }
 
+// calls our generic fetch function with our search fields
 export async function searchGames(
   query: string,
 ): Promise<SearchGamesResponse[]> {
@@ -84,6 +85,7 @@ export async function searchGames(
   );
 }
 
+// retrieves a game with its ID from our generic fetch function
 export async function getGame(id: number): Promise<GetGameResponse> {
   const results = await igdbFetch<GetGameResponse>(
     "games",
